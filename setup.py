@@ -38,6 +38,7 @@ setup(
     install_requires=[
         'google-api-python-client',
         'click',
+        'gspread',
     ],
     entry_points="""
         [console_scripts]

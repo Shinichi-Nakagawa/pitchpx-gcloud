@@ -1,0 +1,17 @@
+---
+config:
+  encoding: utf-8
+  extension: csv
+  file_prefix: mlbam_
+gcloud:
+  app_name: pitchpx
+  drive: mlbam/pitchpx
+  credential_dir: /tmp/.credentials/
+  credential_file: pitchpx-gcloud.json
+  scopes:
+    - https://spreadsheets.google.com/feeds
+  spreadsheet:
+    name: mlbam_datasets
+    key: your worksheet key
+    url: your worksheet url
+

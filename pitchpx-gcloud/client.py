@@ -16,20 +16,28 @@ class PitchpxGcloudClient(object):
     class Mode(Enum):
 
         SPREADSHEET = 0
-        CSV = 1
 
     def __init__(self, client_secret, path, mode):
+        """
+        init
+        :param client_secret: client_secret file(full path, json)
+        :param path: pitchpx datasets path(dir)
+        :param mode: using gcloud service flag(spreadsheet only)
+        """
         self.client_secret = client_secret
         self.mode = mode
         self.path = path
         logging.info('client_secret: {} path: {}'.format(self.client_secret, self.path))
 
     def run(self):
-        api = GoogleDrive(self.path)
+        """
+        Run to process
+        """
+        api = GoogleDrive(self.path, self.client_secret)
+        # TODO 必要が出てきたらUPLOADなどを足す
         if self.mode == self.Mode.SPREADSHEET:
-            api.write_spreadsheet()
-        elif self.mode == self.Mode.CSV:
-            api.upload()
+            api.spread_open()
+            api.spread_update()
         else:
             raise Exception('invalid Mode')
 
@@ -47,10 +55,9 @@ def gcloud(client_secret, directory, mode):
     :param mode:
     """
     logging.basicConfig(level=logging.INFO)
+    # TODO 必要が出てきたらCSV UPLOADを作る
     if mode == 'spreadsheet':
         _mode = PitchpxGcloudClient.Mode.SPREADSHEET
-    elif mode == 'csv':
-        _mode = PitchpxGcloudClient.Mode.CSV
     else:
         raise click.BadParameter('invalid to mode(value:{})'.format(mode))
     client = PitchpxGcloudClient(

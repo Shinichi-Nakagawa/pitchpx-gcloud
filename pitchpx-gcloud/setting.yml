@@ -1,5 +1,0 @@
----
-config:
-  encoding: utf-8
-  extension: csv
-gcloud:
