@@ -6,7 +6,7 @@ import glob
 import logging
 import os
 
-
+import pandas as pd
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
@@ -67,5 +67,14 @@ class GoogleDrive(_GoogleAPI):
         """
         Open Spread update
         """
-        for row in glob.glob('{}/{}*'.format(self.path, self.setting['config']['file_prefix'])):
-            logging.info(row)
+        for file_path in glob.glob('{}/{}*'.format(self.path, self.setting['config']['file_prefix'])):
+            _, filename = os.path.split(file_path)
+            try:
+                datasets = pd.read_csv(file_path)
+            except pd.io.common.EmptyDataError as e:
+                logging.error('error:{} filename:{}'.format(e, file_path))
+                continue
+            logging.info('add to worksheet:{}'.format(filename))
+            rows, cols = datasets.shape
+            logging.info('add to worksheet:{} rows:{} cols:{}'.format(filename, rows, cols))
+            self.sh.add_worksheet(title=filename, rows=rows, cols=cols)
